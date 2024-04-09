@@ -93,14 +93,6 @@ public class NetworkManager : MonoBehaviourSingleton<NetworkManager>, IReceiveDa
     {
         AddClient(ip); 
 
-        int messageTypeValue = BitConverter.ToInt32(data, 0);
-        MessageType messageType = (MessageType)messageTypeValue;
-
-        
-        byte[] messageContent = new byte[data.Length - 4];
-        Array.Copy(data, 4, messageContent, 0, messageContent.Length);
-
-
         if (OnReceiveEvent != null)
             OnReceiveEvent.Invoke(data, ip);
     }

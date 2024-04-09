@@ -54,11 +54,14 @@ public class NetHandShake : IMessage<(long, int)>
 public class NetConsole : IMessage<string>
 {
     string data;
-    public string Deserialize(byte[] message)
+    public char[] Deserialize(byte[] message)
     {
-        string outData;
+        char[] outData = new char[message.Length - 4];
 
-        outData = BitConverter.ToString(message, 4);
+        for (int i = 4; i < message.Length; i++)
+        {
+            outData[i - 4] = (char)message[i];
+        }
 
         return outData;
     }

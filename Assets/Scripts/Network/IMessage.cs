@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using System.Text;
 using System.Net;
+using System.Linq;
 
 public enum MessageType
 {
@@ -54,16 +55,16 @@ public class NetHandShake : IMessage<(long, int)>
 public class NetConsole : IMessage<string>
 {
     string data;
-    public char[] Deserialize(byte[] message)
+    public string Deserialize(byte[] message)
     {
         char[] outData = new char[message.Length - 4];
 
         for (int i = 4; i < message.Length; i++)
-        {
+        { 
             outData[i - 4] = (char)message[i];
         }
 
-        return outData;
+        return outData.ToString();
     }
 
     public MessageType GetMessageType()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.WebSockets;
 using UnityEngine;
 
@@ -76,8 +77,19 @@ public class NetworkManager : MonoBehaviourSingleton<NetworkManager>, IReceiveDa
 
             clients.Add(clientId, new Client(ip, id, Time.realtimeSinceStartup));
 
+            SendHandShake(ip);
+
             clientId++;
         }
+    }
+
+    public void SendHandShake(IPEndPoint ip)
+    {
+        NetHandShake netHandShake = new();
+
+        
+
+        Broadcast(netHandShake.Serialize());
     }
 
     void RemoveClient(IPEndPoint ip)

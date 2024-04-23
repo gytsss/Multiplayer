@@ -7,15 +7,17 @@ using UnityEngine;
 
 public struct Client
 {
+    public string name;
     public float timeStamp;
     public int id;
     public IPEndPoint ipEndPoint;
 
-    public Client(IPEndPoint ipEndPoint, int id, float timeStamp)
+    public Client(IPEndPoint ipEndPoint, int id, float timeStamp, string name)
     {
         this.timeStamp = timeStamp;
         this.id = id;
         this.ipEndPoint = ipEndPoint;
+        this.name = name;
     }
 }
 
@@ -54,7 +56,7 @@ public class NetworkManager : MonoBehaviourSingleton<NetworkManager>, IReceiveDa
         connection = new UdpConnection(port, this);
     }
 
-    public void StartClient(IPAddress ip, int port)
+    public void StartClient(IPAddress ip, int port, string clientName)
     {
         isServer = false;
 
@@ -63,27 +65,27 @@ public class NetworkManager : MonoBehaviourSingleton<NetworkManager>, IReceiveDa
 
         connection = new UdpConnection(ip, port, this);
 
-        AddClient(new IPEndPoint(ip, port));
+        AddClient(new IPEndPoint(ip, port), clientName);
     }
 
-    void AddClient(IPEndPoint ip)
+    void AddClient(IPEndPoint ip, string clientName)
     {
         if (!ipToId.ContainsKey(ip))
         {
-            Debug.Log("Adding client: " + ip.Address);
+            Debug.Log("Adding client: " + ip.Address + " with clientID: " + clientId + " Name: " + clientName);
 
             int id = clientId;
             ipToId[ip] = clientId;
 
-            clients.Add(clientId, new Client(ip, id, Time.realtimeSinceStartup));
+            clients.Add(clientId, new Client(ip, id, Time.realtimeSinceStartup, clientName));
 
-            SendHandShake(ip);
+            SendServerToClientHandShake();
 
             clientId++;
         }
     }
 
-    public void SendHandShake(IPEndPoint ip)
+    public void SendServerToClientHandShake()
     {
         NetHandShake netHandShake = new();
 
@@ -101,9 +103,9 @@ public class NetworkManager : MonoBehaviourSingleton<NetworkManager>, IReceiveDa
         }
     }
 
-    public void OnReceiveData(byte[] data, IPEndPoint ip)
+    public void OnReceiveData(byte[] data, IPEndPoint ip, string clientName)
     {
-        AddClient(ip); 
+        AddClient(ip, clientName); 
 
         if (OnReceiveEvent != null)
             OnReceiveEvent.Invoke(data, ip);

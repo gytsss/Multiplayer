@@ -9,6 +9,7 @@ public class UdpConnection
     {
         public byte[] data;
         public IPEndPoint ipEndPoint;
+        public string name;
     }
 
     private readonly UdpClient connection;
@@ -49,7 +50,7 @@ public class UdpConnection
             {
                 DataReceived dataReceived = dataReceivedQueue.Dequeue();
                 if (receiver != null)
-                    receiver.OnReceiveData(dataReceived.data, dataReceived.ipEndPoint);
+                    receiver.OnReceiveData(dataReceived.data, dataReceived.ipEndPoint, dataReceived.name);
             }
         }
     }

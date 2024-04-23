@@ -10,6 +10,7 @@ public class NetworkScreen : MonoBehaviourSingleton<NetworkScreen>
     public Button startServerBtn;
     public InputField portInputField;
     public InputField addressInputField;
+    public InputField nameInputField;
 
     protected override void Initialize()
     {
@@ -21,8 +22,9 @@ public class NetworkScreen : MonoBehaviourSingleton<NetworkScreen>
     {
         IPAddress ipAddress = IPAddress.Parse(addressInputField.text);
         int port = System.Convert.ToInt32(portInputField.text);
+        string name = nameInputField.text;
 
-        NetworkManager.Instance.StartClient(ipAddress, port);
+        NetworkManager.Instance.StartClient(ipAddress, port, name);
         
         SwitchToChatScreen();
     }

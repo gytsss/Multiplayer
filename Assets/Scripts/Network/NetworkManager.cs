@@ -21,6 +21,18 @@ public struct Client
     }
 }
 
+public struct Player
+{
+    public string name;
+    public int clientID;
+    
+    public Player(string name, int clientID)
+    {
+        this.name = name;
+        this.clientID = clientID;
+    }
+}
+
 public class NetworkManager : MonoBehaviourSingleton<NetworkManager>, IReceiveData
 {
     public IPAddress ipAddress
@@ -46,6 +58,8 @@ public class NetworkManager : MonoBehaviourSingleton<NetworkManager>, IReceiveDa
 
     private readonly Dictionary<int, Client> clients = new Dictionary<int, Client>();
     private readonly Dictionary<IPEndPoint, int> ipToId = new Dictionary<IPEndPoint, int>();
+    
+    private List<Player> Players = new List<Player>();
 
     int clientId = 0; // This id should be generated during first handshake
 
@@ -77,21 +91,25 @@ public class NetworkManager : MonoBehaviourSingleton<NetworkManager>, IReceiveDa
             int id = clientId;
             ipToId[ip] = clientId;
 
+            
             clients.Add(clientId, new Client(ip, id, Time.realtimeSinceStartup, clientName));
-
-            SendServerToClientHandShake();
+            Players.Add(new Player(clientName, clientId));
+            
+            Debug.Log("Player Connected with ID: " + clientId + " Name: " + clientName);
+            
+            SendS2CHandShake(clientId, clientName);
 
             clientId++;
         }
     }
 
-    public void SendServerToClientHandShake()
+    public void SendS2CHandShake(int clientId, string clientName)
     {
-        NetHandShake netHandShake = new();
+        NetHandShakeS2C netHandShakeS2C = new();
 
-        
+         
 
-        Broadcast(netHandShake.Serialize());
+        Broadcast(netHandShakeS2C.Serialize());
     }
 
     void RemoveClient(IPEndPoint ip)

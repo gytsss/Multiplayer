@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using System;
+using System.ComponentModel;
 using System.Text;
 using System.Net;
 using System.Linq;
@@ -20,15 +21,20 @@ public interface IMessage<T>
     public T Deserialize(byte[] message);
 }
 
-public class NetHandShake : IMessage<(long, int)>
+public class NetHandShakeC2S: IMessage<char[]>
 {
-    (long, int) data;
-    public (long, int) Deserialize(byte[] message)
+    char[] data;
+    public char[] Deserialize(byte[] message)
     {
-        (long, int) outData;
+        char[] outData = new char[message.Length - 4];
 
-        outData.Item1 = BitConverter.ToInt64(message, 4);
-        outData.Item2 = BitConverter.ToInt32(message, 12);
+        for (int i = 0; i < outData.Length; i++)
+        {
+            outData[i] = (char)message[i];
+        }
+        
+        // outData.Item1 = BitConverter.ToInt64(message, 4);
+        // outData.Item2 = BitConverter.ToInt32(message, 12);
 
         return outData;
     }
@@ -44,9 +50,45 @@ public class NetHandShake : IMessage<(long, int)>
 
         outData.AddRange(BitConverter.GetBytes((int)GetMessageType()));
 
-        outData.AddRange(BitConverter.GetBytes(data.Item1));
-        outData.AddRange(BitConverter.GetBytes(data.Item2));
+        outData.AddRange(BitConverter.GetBytes(data.Length));
 
+        for (int i = 0; i < data.Length; i++)
+        {
+            outData.Add((byte)data[i]);
+        }
+        
+        return outData.ToArray();
+    }
+}
+
+public class NetHandShakeS2C : IMessage<char[]>
+{
+    char[] data;
+    public char[]Deserialize(byte[] message)
+    {
+        char[] outData = new char[message.Length - 4];
+        
+
+        return outData;
+    }
+
+    public MessageType GetMessageType()
+    {
+       return MessageType.HandShake;
+    }
+
+    public byte[] Serialize()
+    {
+        List<byte> outData = new List<byte>();
+
+        outData.AddRange(BitConverter.GetBytes((int)GetMessageType()));
+
+        outData.AddRange(BitConverter.GetBytes(data.Length));
+
+        for (int i = 0; i < data.Length; i++)
+        {
+            outData.Add((byte)data[i]);
+        }
 
         return outData.ToArray();
     }

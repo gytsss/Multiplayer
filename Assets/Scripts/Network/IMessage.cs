@@ -30,7 +30,7 @@ public class NetHandShakeC2S: IMessage<char[]>
 
         for (int i = 0; i < outData.Length; i++)
         {
-            outData[i] = (char)message[i];
+            outData[i] = (char)message[i + 4];
         }
         
         // outData.Item1 = BitConverter.ToInt64(message, 4);
@@ -64,10 +64,15 @@ public class NetHandShakeC2S: IMessage<char[]>
 public class NetHandShakeS2C : IMessage<char[]>
 {
     char[] data;
+    
     public char[]Deserialize(byte[] message)
     {
         char[] outData = new char[message.Length - 4];
-        
+            
+        for (int i = 0; i < outData.Length; i++)
+        {
+            outData[i] = (char)message[i + 4];
+        }
 
         return outData;
     }

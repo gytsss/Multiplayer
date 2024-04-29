@@ -86,8 +86,6 @@ public class NetworkManager : MonoBehaviourSingleton<NetworkManager>, IReceiveDa
     {
         if (!ipToId.ContainsKey(ip))
         {
-            Debug.Log("Adding client: " + ip.Address + " with clientID: " + clientId + " Name: " + clientName);
-
             int id = clientId;
             ipToId[ip] = clientId;
 
@@ -105,7 +103,7 @@ public class NetworkManager : MonoBehaviourSingleton<NetworkManager>, IReceiveDa
 
     public void SendS2CHandShake(int clientId, string clientName)
     {
-        NetHandShakeS2C netHandShakeS2C = new();
+        NetHandShakeS2C netHandShakeS2C = new NetHandShakeS2C();
 
          
 

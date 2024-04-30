@@ -104,8 +104,8 @@ public class NetworkManager : MonoBehaviourSingleton<NetworkManager>, IReceiveDa
     public void SendS2CHandShake(int clientId, string clientName)
     {
         NetHandShakeS2C netHandShakeS2C = new NetHandShakeS2C();
-
-         
+        
+          
 
         Broadcast(netHandShakeS2C.Serialize());
     }

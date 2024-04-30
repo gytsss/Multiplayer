@@ -23,7 +23,7 @@ public interface IMessage<T>
 
 public class NetHandShakeC2S: IMessage<char[]>
 {
-    char[] data;
+    public char[] data;
     public char[] Deserialize(byte[] message)
     {
         char[] outData = new char[message.Length - 4];
@@ -63,7 +63,7 @@ public class NetHandShakeC2S: IMessage<char[]>
 
 public class NetHandShakeS2C : IMessage<char[]>
 {
-    char[] data;
+   public char[] data;
     
     public char[]Deserialize(byte[] message)
     {

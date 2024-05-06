@@ -25,11 +25,13 @@ public struct Player
 {
     public string name;
     public int clientID;
-    
-    public Player(string name, int clientID)
+    public List<Player> players;
+
+    public Player(string name, int clientID, List<Player> players)
     {
         this.name = name;
         this.clientID = clientID;
+        this.players = players;
     }
 }
 
@@ -91,7 +93,7 @@ public class NetworkManager : MonoBehaviourSingleton<NetworkManager>, IReceiveDa
 
             
             clients.Add(clientId, new Client(ip, id, Time.realtimeSinceStartup, clientName));
-            Players.Add(new Player(clientName, clientId));
+            Players.Add(new Player(clientName, clientId, Players));
             
             Debug.Log("Player Connected with ID: " + clientId + " Name: " + clientName);
             
@@ -103,9 +105,9 @@ public class NetworkManager : MonoBehaviourSingleton<NetworkManager>, IReceiveDa
 
     public void SendS2CHandShake(int clientId, string clientName)
     {
-        NetHandShakeS2C netHandShakeS2C = new NetHandShakeS2C();
+        NetHandShakeS2C netHandShakeS2C = new();
         
-          
+        netHandShakeS2C.data = new Player(clientName, clientId, Players);       
 
         Broadcast(netHandShakeS2C.Serialize());
     }

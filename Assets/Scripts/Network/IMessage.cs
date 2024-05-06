@@ -61,11 +61,11 @@ public class NetHandShakeC2S: IMessage<char[]>
     }
 }
 
-public class NetHandShakeS2C : IMessage<char[]>
+public class NetHandShakeS2C : IMessage<Player>
 {
-   public char[] data;
+   public Player data;
     
-    public char[]Deserialize(byte[] message)
+    public Player Deserialize(byte[] message)
     {
         char[] outData = new char[message.Length - 4];
             
@@ -74,7 +74,7 @@ public class NetHandShakeS2C : IMessage<char[]>
             outData[i] = (char)message[i + 4];
         }
 
-        return outData;
+        return data;
     }
 
     public MessageType GetMessageType()
@@ -99,6 +99,66 @@ public class NetHandShakeS2C : IMessage<char[]>
     }
 }
 
+// //*
+// /// <summary>
+// ///  public Player Deserialize(byte[] message)
+// {
+//     int offset = 4;
+//
+//     // Deserializar ID
+//     data.clientID = BitConverter.ToInt32(message, offset);
+//     offset += sizeof(int);
+//
+//     // Deserializar Nombre
+//     int nameLength = BitConverter.ToInt32(message, offset);
+//     offset += sizeof(int);
+//     data.name = Encoding.UTF8.GetString(message, offset, nameLength);
+//     offset += nameLength;
+//
+//     // Deserializar Número de jugadores
+//     int numPlayers = BitConverter.ToInt32(message, offset);
+//     offset += sizeof(int);
+//
+//     // Deserializar Datos de jugadores
+//     data.players = new List<Player>();
+//     for (int i = 0; i < numPlayers; i++)
+//     {
+//         int playerId = BitConverter.ToInt32(message, offset);
+//         offset += sizeof(int);
+//
+//         int playerNameLength = BitConverter.ToInt32(message, offset);
+//         offset += sizeof(int);
+//         string playerName = Encoding.UTF8.GetString(message, offset, playerNameLength);
+//         offset += playerNameLength;
+//
+//         // Crear un nuevo objeto Player y agregarlo a la lista
+//         data.players.Add(new Player { clientID = playerId, name = playerName });
+//     }
+//
+//     return data;
+// }
+//
+// public MessageType GetMessageType()
+// {
+//     return MessageType.HandShake;
+// }
+//
+// public byte[] Serialize()
+// {
+//     // Serialize ID
+//     List<byte> outData = new List<byte>();
+//     outData.AddRange(BitConverter.GetBytes((int)GetMessageType()));
+//     outData.AddRange(BitConverter.GetBytes(data.clientID));
+//
+//     // Serialize Name
+//     byte[] nameBytes = Encoding.UTF8.GetBytes(data.name);
+//     outData.AddRange(BitConverter.GetBytes(nameBytes.Length));
+//     outData.AddRange(nameBytes);
+//
+//     return outData.ToArray();
+// }
+//
+// /// </summary>
 public class NetConsole : IMessage<string>
 {
     string data;

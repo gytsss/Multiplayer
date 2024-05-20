@@ -25,125 +25,44 @@ public struct Player
 {
     public string name;
     public int clientID;
-    public List<Player> players;
 
-    public Player(string name, int clientID, List<Player> players)
+    public Player(string name, int clientID)
     {
         this.name = name;
         this.clientID = clientID;
-        this.players = players;
     }
 }
 
-public class NetworkManager : MonoBehaviourSingleton<NetworkManager>, IReceiveData
+public abstract class NetworkManager : MonoBehaviour, IReceiveData
 {
-    public IPAddress ipAddress
-    {
-        get; private set;
-    }
+    public IPAddress ipAddress { get; protected set; }
 
-    public int port
-    {
-        get; private set;
-    }
-
-    public bool isServer
-    {
-        get; private set;
-    }
+    public int port { get; protected set; }
 
     public int TimeOut = 30;
 
     public Action<byte[], IPEndPoint> OnReceiveEvent;
 
-    private UdpConnection connection;
+    protected UdpConnection connection;
 
-    private readonly Dictionary<int, Client> clients = new Dictionary<int, Client>();
-    private readonly Dictionary<IPEndPoint, int> ipToId = new Dictionary<IPEndPoint, int>();
-    
-    private List<Player> Players = new List<Player>();
+    protected List<Player> Players = new List<Player>();
 
-    int clientId = 0; // This id should be generated during first handshake
+    protected int clientId = 0;
 
-    public void StartServer(int port)
+
+    public void OnReceiveData(byte[] data, IPEndPoint ip)
     {
-        isServer = true;
-        this.port = port;
-        connection = new UdpConnection(port, this);
-    }
-
-    public void StartClient(IPAddress ip, int port, string clientName)
-    {
-        isServer = false;
-
-        this.port = port;
-        this.ipAddress = ip;
-
-        connection = new UdpConnection(ip, port, this);
-
-        AddClient(new IPEndPoint(ip, port), clientName);
-    }
-
-    void AddClient(IPEndPoint ip, string clientName)
-    {
-        if (!ipToId.ContainsKey(ip))
-        {
-            int id = clientId;
-            ipToId[ip] = clientId;
-
-            
-            clients.Add(clientId, new Client(ip, id, Time.realtimeSinceStartup, clientName));
-            Players.Add(new Player(clientName, clientId, Players));
-            
-            Debug.Log("Player Connected with ID: " + clientId + " Name: " + clientName);
-            
-            SendS2CHandShake(clientId, clientName);
-
-            clientId++;
-        }
-    }
-
-    public void SendS2CHandShake(int clientId, string clientName)
-    {
-        NetHandShakeS2C netHandShakeS2C = new();
-        
-        netHandShakeS2C.data = new Player(clientName, clientId, Players);       
-
-        Broadcast(netHandShakeS2C.Serialize());
-    }
-
-    void RemoveClient(IPEndPoint ip)
-    {
-        if (ipToId.ContainsKey(ip))
-        {
-            Debug.Log("Removing client: " + ip.Address);
-            clients.Remove(ipToId[ip]);
-        }
-    }
-
-    public void OnReceiveData(byte[] data, IPEndPoint ip, string clientName)
-    {
-        AddClient(ip, clientName); 
-
         if (OnReceiveEvent != null)
             OnReceiveEvent.Invoke(data, ip);
+
+        ManageData(data, ip);
     }
 
+    protected abstract void ManageData(byte[] data, IPEndPoint ip);
 
-    public void SendToServer(byte[] data)
+    private void Start()
     {
-        connection.Send(data);
-    }
-
-    public void Broadcast(byte[] data)
-    {
-        using (var iterator = clients.GetEnumerator())
-        {
-            while (iterator.MoveNext())
-            {
-                connection.Send(data, iterator.Current.Value.ipEndPoint);
-            }
-        }
+        ChatScreen.Instance.onSendChatMessage.AddListener(CreateMessage);
     }
 
     void Update()
@@ -152,4 +71,7 @@ public class NetworkManager : MonoBehaviourSingleton<NetworkManager>, IReceiveDa
         if (connection != null)
             connection.FlushReceiveData();
     }
+    
+
+    protected abstract void CreateMessage(string message);
 }

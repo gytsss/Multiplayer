@@ -50,7 +50,7 @@ public class UdpConnection
             {
                 DataReceived dataReceived = dataReceivedQueue.Dequeue();
                 if (receiver != null)
-                    receiver.OnReceiveData(dataReceived.data, dataReceived.ipEndPoint, dataReceived.name);
+                    receiver.OnReceiveData(dataReceived.data, dataReceived.ipEndPoint);
             }
         }
     }

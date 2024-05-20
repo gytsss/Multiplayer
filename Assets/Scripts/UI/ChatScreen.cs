@@ -1,49 +1,42 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class ChatScreen : MonoBehaviourSingleton<ChatScreen>
 {
     public Text messages;
     public InputField inputMessage;
+    
+    public UnityEvent<string, int> onChatMessage;
+    public UnityEvent<string> onSendChatMessage;
 
     protected override void Initialize()
     {
         inputMessage.onEndEdit.AddListener(OnEndEdit);
 
+        onChatMessage.AddListener(OnChatMessage);
         this.gameObject.SetActive(false);
-
-        NetworkManager.Instance.OnReceiveEvent += OnReceiveDataEvent;
     }
 
-    void OnReceiveDataEvent(byte[] data, IPEndPoint ep)
+    private void OnChatMessage(string msg, int ID)
     {
-        if (NetworkManager.Instance.isServer)
-        {
-            NetworkManager.Instance.Broadcast(data);
-        }
-
-        messages.text += System.Text.ASCIIEncoding.UTF8.GetString(data) + System.Environment.NewLine;
+        messages.text += msg + System.Environment.NewLine;
     }
+    
 
     void OnEndEdit(string str)
     {
         if (inputMessage.text != "")
         {
-            if (NetworkManager.Instance.isServer)
-            {
-                NetworkManager.Instance.Broadcast(System.Text.ASCIIEncoding.UTF8.GetBytes(inputMessage.text));
-                messages.text += inputMessage.text + System.Environment.NewLine;
-            }
-            else
-            {
-                NetworkManager.Instance.SendToServer(System.Text.ASCIIEncoding.UTF8.GetBytes(inputMessage.text));
-            }
+            onSendChatMessage.Invoke(inputMessage.text);
 
             inputMessage.ActivateInputField();
             inputMessage.Select();
             inputMessage.text = "";
+            
         }
-
+        
     }
 
 }

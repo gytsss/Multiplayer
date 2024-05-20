@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 10
+  serializedVersion: 9
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -38,12 +38,13 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 12
+  m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -66,6 +67,9 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
+    m_FinalGather: 0
+    m_FinalGatherFiltering: 1
+    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -232,7 +236,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 180350410}
-  - component: {fileID: 180350409}
+  - component: {fileID: 180350412}
+  - component: {fileID: 180350411}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -240,19 +245,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &180350409
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 180350408}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f30c9f44b7174d45b74c4ae777e3447, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TimeOut: 30
 --- !u!4 &180350410
 Transform:
   m_ObjectHideFlags: 0
@@ -268,6 +260,32 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &180350411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 180350408}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbd2d97a724e4b9caa6113a900ac1f1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TimeOut: 30
+--- !u!114 &180350412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 180350408}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac1f796fa7874c34bde7de8aa5e04d4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TimeOut: 30
 --- !u!1 &194703369
 GameObject:
   m_ObjectHideFlags: 0
@@ -445,6 +463,8 @@ MonoBehaviour:
   portInputField: {fileID: 1558557928}
   addressInputField: {fileID: 2123302590}
   nameInputField: {fileID: 1716602340}
+  clientNetworkManager: {fileID: 180350412}
+  serverNetworkManager: {fileID: 180350411}
 --- !u!1 &304126657
 GameObject:
   m_ObjectHideFlags: 0
@@ -870,8 +890,9 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
   m_Enabled: 1
-  serializedVersion: 11
+  serializedVersion: 10
   m_Type: 1
+  m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_Intensity: 1
   m_Range: 10
@@ -1122,6 +1143,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   messages: {fileID: 2097084993}
   inputMessage: {fileID: 1132568522}
+  onChatMessage:
+    m_PersistentCalls:
+      m_Calls: []
+  onSendChatMessage:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1132568520
 GameObject:
   m_ObjectHideFlags: 0

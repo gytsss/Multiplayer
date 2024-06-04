@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using System;
 using System.Net;
+using UnityEngine.UI;
 
 public class NetworkScreen : MonoBehaviourSingleton<NetworkScreen>
 {
@@ -23,7 +21,7 @@ public class NetworkScreen : MonoBehaviourSingleton<NetworkScreen>
     void OnConnectBtnClick()
     {
         IPAddress ipAddress = IPAddress.Parse(addressInputField.text);
-        int port = System.Convert.ToInt32(portInputField.text);
+        int port = Convert.ToInt32(portInputField.text);
         string name = nameInputField.text;
         
         clientNetworkManager.StartClient(ipAddress, port, name);
@@ -33,7 +31,7 @@ public class NetworkScreen : MonoBehaviourSingleton<NetworkScreen>
 
     void OnStartServerBtnClick()
     {
-        int port = System.Convert.ToInt32(portInputField.text);
+        int port = Convert.ToInt32(portInputField.text);
         serverNetworkManager.StartServer(port);
         SwitchToChatScreen();
     }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using UnityEngine;
 
 public class UdpConnection
 {
@@ -70,7 +71,7 @@ public class UdpConnection
         catch(SocketException e)
         {
             // This happens when a client disconnects, as we fail to send to that port.
-            UnityEngine.Debug.LogError("[UdpConnection] " + e.Message);
+            Debug.LogError("[UdpConnection] " + e.Message);
         }
 
         connection.BeginReceive(OnReceive, null);

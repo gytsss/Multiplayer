@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Net.NetworkInformation;
-using System.Net.WebSockets;
 using UnityEngine;
 
 public struct Client

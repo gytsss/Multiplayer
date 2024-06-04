@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
@@ -21,7 +20,7 @@ public class ChatScreen : MonoBehaviourSingleton<ChatScreen>
 
     private void OnChatMessage(string msg, int ID)
     {
-        messages.text += msg + System.Environment.NewLine;
+        messages.text += msg + Environment.NewLine;
     }
     
 

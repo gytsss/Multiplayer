@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Net;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class ServerNetworkManager : NetworkManager
 {

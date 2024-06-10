@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Net;
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class ChatScreen : MonoBehaviourSingleton<ChatScreen>
 {
+    
     public Text messages;
     public InputField inputMessage;
     
